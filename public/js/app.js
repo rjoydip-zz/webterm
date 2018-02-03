@@ -1303,28 +1303,29 @@ const term = new __WEBPACK_IMPORTED_MODULE_0_xterm__["Terminal"]({
     rows: 15
 });
 
-term.prompt = function () {
+let line_inputs = [];
+
+term.prompt = () => {
     term.write('\r\n' + terminalPrefix);
 };
 
 term.open($terminal);
-term.writeln('Welcome to xterm.js');
-term.writeln('Type some keys and commands to play around.');
-// term.write(terminalPrefix);
+term.writeln('Welcome to Web Terminal');
 term.prompt();
 
+term.on('key', (key, ev) => {
+    let printable = (!ev.altKey && !ev.altGraphKey && !ev.ctrlKey && !ev.metaKey), 
+        kc = ev.keyCode;
 
-term.on('key', function (key, ev) {
-    var printable = (!ev.altKey && !ev.altGraphKey && !ev.ctrlKey && !ev.metaKey);
-    var kc = ev.keyCode;
-    
+    console.log(kc, key)
+
     if (kc == 13) {
-        term.prompt();
+        return line_inputs = [] , term.prompt();
     } else if (kc == 8) {
         // remove previous character when backspace pressed
-        term.write('\b \b');
+        return line_inputs.length !== 0 ? term.write('\b \b') : false, line_inputs.pop();
     } else if (printable) {
-        term.write(key);
+        return line_inputs.push(key) , term.write(key);
     }
 });
 
