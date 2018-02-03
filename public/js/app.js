@@ -1303,37 +1303,30 @@ const term = new __WEBPACK_IMPORTED_MODULE_0_xterm__["Terminal"]({
     rows: 15
 });
 
+term.prompt = function () {
+    term.write('\r\n' + terminalPrefix);
+};
+
 term.open($terminal);
-term.write(terminalPrefix);
+term.writeln('Welcome to xterm.js');
+term.writeln('Type some keys and commands to play around.');
+// term.write(terminalPrefix);
+term.prompt();
 
-term.textarea.onkeydown = (e) => {
-    const keyCode = parseInt(e.keyCode);
 
-    // get key modified state
-    const caps = event.getModifierState && event.getModifierState('CapsLock');
-    const shift = event.getModifierState && event.getModifierState('Shift');
-    const alt = event.getModifierState && event.getModifierState('Alt');
-    const tab = event.getModifierState && event.getModifierState('Tab');
-
-    const char = caps || shift ? e.key.toString().toUpperCase() : e.key.toString().toLowerCase();
-
-    if (keyCode === 18 || keyCode === 20 || keyCode === 9 || keyCode === 16) {
-        e.preventDefault();
-        return false;
+term.on('key', function (key, ev) {
+    var printable = (!ev.altKey && !ev.altGraphKey && !ev.ctrlKey && !ev.metaKey);
+    var kc = ev.keyCode;
+    
+    if (kc == 13) {
+        term.prompt();
+    } else if (kc == 8) {
+        // remove previous character when backspace pressed
+        term.write('\b \b');
+    } else if (printable) {
+        term.write(key);
     }
-
-    if (keyCode === 8) {
-        console.log("Backspace");
-        return false;
-    }
-
-    // new line by pressed 'Enter' key
-    if (keyCode === 13) {
-        return term.write(terminalPrefix);
-    }
-
-    return term.write(char);
-}
+});
 
 /***/ }),
 /* 13 */
