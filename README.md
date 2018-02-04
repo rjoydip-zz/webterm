@@ -1,5 +1,16 @@
 # Web Terminal
 
-A simple terminal using xterm.js
+A simple web terminal using HTML, CSS, JavaScript, xterm.js, socket.io.
 
-> NOTE: WIP
+# Locally Installation
+
+```sh
+$ git clone https://github.com/rjoydip/webterm.git
+$ cd webterm
+$ npm install
+$ npm start
+```
+
+After run the server please visit [localhost:8080](http://localhost:8080)
+
+That's all :smile:
