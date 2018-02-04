@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "npm run compile",
+    "start": "npm run server",
+    "server": "node server.js",
     "compile": "webpack --watch --config webpack.config.js"
   },
   "keywords": [],
