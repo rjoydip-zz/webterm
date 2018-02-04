@@ -3,7 +3,7 @@ var path = require('path'),
     express = require('express'),
     app = express(),
     server = require('http').createServer(app),
-    io = require('socket.io')(8080);
+    io = require('socket.io')(process.env.PORT);
 
 app.use(express.static('public'))
 app.get('/', function (req, res) {
