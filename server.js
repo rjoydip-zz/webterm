@@ -2,7 +2,7 @@ var path = require('path'),
     express = require('express'),
     app = express(),
     server = require('http').createServer(app),
-    io = require('socket.io')(80);
+    io = require('socket.io')(server);
 
 app.use(express.static('public'));
 app.get('/', function (req, res) {
