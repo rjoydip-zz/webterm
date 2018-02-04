@@ -1,15 +1,6 @@
 import {
     Terminal
 } from 'xterm';
-
-import vm from 'vm';
-import path from 'path';
-import stream from 'stream';
-import util from 'util';
-import http from 'http';
-import process from 'process';
-import os from 'os';
-import url from 'url';
 import io from 'socket.io-client';
 
 let line_inputs = [];
@@ -25,6 +16,9 @@ const socket = io('http://localhost');
 
 // re-useable terminal prefixer as terminal prompt
 term.prompt = () => {
+    term.write('\r' + terminalPrefix);
+};
+term.newLineprompt = () => {
     term.write('\r\n' + terminalPrefix);
 };
 
@@ -41,7 +35,7 @@ socket.on('connect', function () {
         });
 
         if (!data['sys']) {
-            term.prompt();
+            term.newLineprompt();
             if (data['error'] === null && data['stderr'] === '') {
                 term.write(data['stdout']);
             } else {
@@ -58,8 +52,6 @@ socket.on('disconnect', function () {
 });
 
 console.log(__dirname, __filename);
-// let res = vm.runInNewContext('a + 5', { a : 100 });
-// vm.runInNewContext('console.log("Hello")');
 
 // terminal key input event
 term.on('key', (key, ev) => {
@@ -67,6 +59,10 @@ term.on('key', (key, ev) => {
         kc = ev.keyCode;
 
     if (kc == 13) {
+        if (line_inputs.join('').toString() === 'clear' || line_inputs.join('').toString() === 'cls') {
+            console.log("Clear");
+            return term.reset(), term.prompt();
+        }
         socket.emit('message', {
             exec: line_inputs.join('')
         });
