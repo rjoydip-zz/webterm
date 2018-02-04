@@ -4,7 +4,7 @@ var path = require('path'),
     server = require('http').createServer(app),
     io = require('socket.io')(server);
 
-app.use(express.static('public'));
+app.use(express.static('public'))
 app.get('/', function (req, res) {
     res.sendFile(path.join(__dirname, 'public', '/index.html'));
 });
@@ -32,7 +32,7 @@ io.on('connection', function (socket) {
     });
 });
 
-const port = process.env.PORT || 5000; // Use the port that Heroku provides or default to 5000  
+const port = process.env.PORT || 80; // Use the port that Heroku provides or default to 5000  
 app.listen(port, function () {
     console.log("Express server listening on port %d", port);
 });
