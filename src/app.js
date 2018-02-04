@@ -13,7 +13,7 @@ const terminalPrefix = `\u001b[1;3;31mwebTerm\u001b[0m${String.fromCodePoint(0x0
         cursorBlink: true,
         rows: 15
     }),
-    socket = io(window.location.hostname);
+    socket = io(window.location.hostname + ':8080');
 
 console.log(window.location);
 

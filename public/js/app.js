@@ -4574,7 +4574,7 @@ const terminalPrefix = `\u001b[1;3;31mwebTerm\u001b[0m${String.fromCodePoint(0x0
         cursorBlink: true,
         rows: 15
     }),
-    socket = __WEBPACK_IMPORTED_MODULE_1_socket_io_client___default()(window.location.hostname);
+    socket = __WEBPACK_IMPORTED_MODULE_1_socket_io_client___default()(window.location.hostname + ':8080');
 
 console.log(window.location);
 
