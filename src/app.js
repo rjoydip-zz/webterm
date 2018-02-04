@@ -4,7 +4,7 @@ import {
 import io from 'socket.io-client';
 
 let line_inputs = [],
-    history = ['a', 'b', 'c'],
+    history = [],
     upDownKeyPressedCount = -1;
 
 const terminalPrefix = "\u001b[1;3;31mwTerm\u001b[0m $ ",
@@ -30,7 +30,6 @@ term.writeln('Welcome to Web Terminal');
 term.prompt();
 
 socket.on('connect', function () {
-    console.log("Client socket disconnect");
     socket.on('terminal', function (data) {
         socket.emit('message', {
             sys: 'Client connected'
@@ -77,20 +76,20 @@ term.on('key', (key, ev) => {
             upDownKeyPressedCount = parseInt(history.length - 1);
         } else if (parseInt(upDownKeyPressedCount) < 0) {
             upDownKeyPressedCount = 0;
-        }
+        } else {}
 
-        console.log(upDownKeyPressedCount);
+        line_inputs = [];
         if (kc === 38) {
             // up history
             if (history.length > 0) {
-                term.write(history[upDownKeyPressedCount]);
-                upDownKeyPressedCount++;
+                const value = history[upDownKeyPressedCount];
+                return line_inputs.push(value), term.write(line_inputs.join('')), upDownKeyPressedCount++;
             }
         } else if (kc === 40) {
             // down history
             if (history.length > 0) {
-                term.write(history[upDownKeyPressedCount]);
-                upDownKeyPressedCount--;
+                const value = history[upDownKeyPressedCount];
+                return line_inputs.push(value), term.write(line_inputs.join('')), upDownKeyPressedCount--;
             }
         } else {
             // prevent left-right arrow
