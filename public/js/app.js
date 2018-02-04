@@ -4568,13 +4568,15 @@ let line_inputs = [],
     history = [],
     upDownKeyPressedCount = -1;
 
-const terminalPrefix = `\u001b[1;3;31mwebTerminal\u001b[0m${String.fromCodePoint(0x026A1)} `,
+const terminalPrefix = `\u001b[1;3;31mwebTerm\u001b[0m${String.fromCodePoint(0x026A1)} `,
     $terminal = document.getElementById('terminal'),
     term = new __WEBPACK_IMPORTED_MODULE_0_xterm__["Terminal"]({
         cursorBlink: true,
         rows: 15
     }),
-    socket = __WEBPACK_IMPORTED_MODULE_1_socket_io_client___default()('http://localhost');
+    socket = __WEBPACK_IMPORTED_MODULE_1_socket_io_client___default()(window.location.hostname);
+
+console.log(window.location);
 
 // re-useable terminal prefixer as terminal prompt
 term.prompt = () => {

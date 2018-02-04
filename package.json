@@ -1,11 +1,10 @@
 {
-  "name": "xtermjs",
+  "name": "webterm",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
-    "start": "npm run server",
-    "server": "node server.js",
+    "start": "node server.js",
     "compile": "webpack --watch --config webpack.config.js"
   },
   "keywords": [],

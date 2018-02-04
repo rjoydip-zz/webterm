@@ -7,13 +7,15 @@ let line_inputs = [],
     history = [],
     upDownKeyPressedCount = -1;
 
-const terminalPrefix = `\u001b[1;3;31mwebTerminal\u001b[0m${String.fromCodePoint(0x026A1)} `,
+const terminalPrefix = `\u001b[1;3;31mwebTerm\u001b[0m${String.fromCodePoint(0x026A1)} `,
     $terminal = document.getElementById('terminal'),
     term = new Terminal({
         cursorBlink: true,
         rows: 15
     }),
-    socket = io('http://localhost');
+    socket = io(window.location.hostname);
+
+console.log(window.location);
 
 // re-useable terminal prefixer as terminal prompt
 term.prompt = () => {
