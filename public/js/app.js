@@ -4793,28 +4793,30 @@ module.exports = function(obj, fn){
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* WEBPACK VAR INJECTION */(function(__dirname, __filename) {/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_xterm__ = __webpack_require__(53);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_xterm__ = __webpack_require__(53);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_xterm___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_xterm__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_socket_io_client__ = __webpack_require__(103);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_socket_io_client___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_socket_io_client__);
 
 
 
-let line_inputs = [];
-const terminalPrefix = "\u001b[1;3;31mwTerm\u001b[0m $ ";
-const $terminal = document.getElementById('terminal');
+let line_inputs = [],
+    history = ['a', 'b', 'c'],
+    upDownKeyPressedCount = -1;
 
-// terminal instance
-const term = new __WEBPACK_IMPORTED_MODULE_0_xterm__["Terminal"]({
-    cursorBlink: true,
-    rows: 15
-});
-const socket = __WEBPACK_IMPORTED_MODULE_1_socket_io_client___default()('http://localhost');
+const terminalPrefix = "\u001b[1;3;31mwTerm\u001b[0m $ ",
+    $terminal = document.getElementById('terminal'),
+    term = new __WEBPACK_IMPORTED_MODULE_0_xterm__["Terminal"]({
+        cursorBlink: true,
+        rows: 15
+    }),
+    socket = __WEBPACK_IMPORTED_MODULE_1_socket_io_client___default()('http://localhost');
 
 // re-useable terminal prefixer as terminal prompt
 term.prompt = () => {
     term.write('\r' + terminalPrefix);
 };
+
 term.newLineprompt = () => {
     term.write('\r\n' + terminalPrefix);
 };
@@ -4848,22 +4850,50 @@ socket.on('disconnect', function () {
     console.log("Client socket disconnect");
 });
 
-console.log(__dirname, __filename);
-
 // terminal key input event
 term.on('key', (key, ev) => {
-    let printable = (!ev.altKey && !ev.altGraphKey && !ev.ctrlKey && !ev.metaKey),
-        kc = ev.keyCode;
+    const printable = (!ev.altKey && !ev.altGraphKey && !ev.ctrlKey && !ev.metaKey),
+        kc = parseInt(ev.keyCode);
 
-    if (kc == 13) {
-        if (line_inputs.join('').toString() === 'clear' || line_inputs.join('').toString() === 'cls') {
-            console.log("Clear");
-            return term.reset(), term.prompt();
+    if (kc === 13) {
+        const input = line_inputs.join('').toString();
+        history.push(input);
+        if (input === 'clear' || input === 'cls') {
+            return term.reset(), term.prompt(), line_inputs = [];
+        } else if (input === 'history') {
+            term.newLineprompt();
+            return term.write(history.join(', ')), term.newLineprompt();
+        } else {
+            return socket.emit('message', {
+                exec: input
+            });
         }
-        socket.emit('message', {
-            exec: line_inputs.join('')
-        });
-    } else if (kc == 8) {
+    } else if (kc === 37 || kc === 38 || kc === 39 || kc === 40) {
+        // upArrow > 38 , downArrow > 40
+        if (parseInt(upDownKeyPressedCount) >= parseInt(history.length)) {
+            upDownKeyPressedCount = parseInt(history.length - 1);
+        } else if (parseInt(upDownKeyPressedCount) < 0) {
+            upDownKeyPressedCount = 0;
+        }
+
+        console.log(upDownKeyPressedCount);
+        if (kc === 38) {
+            // up history
+            if (history.length > 0) {
+                term.write(history[upDownKeyPressedCount]);
+                upDownKeyPressedCount++;
+            }
+        } else if (kc === 40) {
+            // down history
+            if (history.length > 0) {
+                term.write(history[upDownKeyPressedCount]);
+                upDownKeyPressedCount--;
+            }
+        } else {
+            // prevent left-right arrow
+            return true;
+        }
+    } else if (kc === 8) {
         // Backspace: remove previous character when key pressed
         return line_inputs.length !== 0 ? term.write('\b \b') : false, line_inputs.pop();
     } else if (printable) {
@@ -4871,7 +4901,6 @@ term.on('key', (key, ev) => {
         return line_inputs.push(key), term.write(key);
     }
 });
-/* WEBPACK VAR INJECTION */}.call(__webpack_exports__, "/", "/index.js"))
 
 /***/ }),
 /* 53 */
