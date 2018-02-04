@@ -43,7 +43,7 @@ socket.on('connect', function () {
                 term.write(data['stderr']);
             }
             // Enter: re initilize line input array and show terminal prefixer
-            return line_inputs = [], term.write('\r' + terminalPrefix);
+            return line_inputs = [], term.prompt();
         }
     });
 });
@@ -57,6 +57,7 @@ term.on('key', (key, ev) => {
     const printable = (!ev.altKey && !ev.altGraphKey && !ev.ctrlKey && !ev.metaKey),
         kc = parseInt(ev.keyCode);
 
+        console.log(kc,key);
     if (kc === 13) {
         const input = line_inputs.join('').toString();
         history.push(input);
@@ -70,6 +71,9 @@ term.on('key', (key, ev) => {
                 exec: input
             });
         }
+    } else if (kc === 46 || kc === 35 || kc === 36) {
+        // DELETE: 46, END: 35, HOME: 36, INSERT: 45, '-': 45
+        return true;
     } else if (kc === 37 || kc === 38 || kc === 39 || kc === 40) {
         // upArrow > 38 , downArrow > 40
         if (parseInt(upDownKeyPressedCount) >= parseInt(history.length)) {
@@ -78,18 +82,17 @@ term.on('key', (key, ev) => {
             upDownKeyPressedCount = 0;
         } else {}
 
-        line_inputs = [];
         if (kc === 38) {
             // up history
             if (history.length > 0) {
                 const value = history[upDownKeyPressedCount];
-                return line_inputs.push(value), term.write(line_inputs.join('')), upDownKeyPressedCount++;
+                return line_inputs = value.split(''), term.prompt(), term.write(value), upDownKeyPressedCount++;
             }
         } else if (kc === 40) {
             // down history
             if (history.length > 0) {
                 const value = history[upDownKeyPressedCount];
-                return line_inputs.push(value), term.write(line_inputs.join('')), upDownKeyPressedCount--;
+                return line_inputs = value.split(''), term.prompt(), term.write(value), upDownKeyPressedCount--;
             }
         } else {
             // prevent left-right arrow
