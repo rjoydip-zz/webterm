@@ -4568,7 +4568,7 @@ let line_inputs = [],
     history = [],
     upDownKeyPressedCount = -1;
 
-const terminalPrefix = "\u001b[1;3;31mwTerm\u001b[0m $ ",
+const terminalPrefix = `\u001b[1;3;31mwebTerminal\u001b[0m${String.fromCodePoint(0x026A1)} `,
     $terminal = document.getElementById('terminal'),
     term = new __WEBPACK_IMPORTED_MODULE_0_xterm__["Terminal"]({
         cursorBlink: true,
@@ -4578,17 +4578,17 @@ const terminalPrefix = "\u001b[1;3;31mwTerm\u001b[0m $ ",
 
 // re-useable terminal prefixer as terminal prompt
 term.prompt = () => {
-    term.write('\r' + terminalPrefix);
+    term.write('\r' + terminalPrefix + ' ');
 };
 
 term.newLineprompt = () => {
-    term.write('\r\n' + terminalPrefix);
+    term.write('\r\n' + terminalPrefix + ' ');
 };
 
 // opening terminal and initilize default text
 term.open($terminal);
 term.writeln('Welcome to Web Terminal');
-term.prompt();
+term.newLineprompt();
 
 socket.on('connect', function () {
     socket.on('terminal', function (data) {
@@ -4618,7 +4618,6 @@ term.on('key', (key, ev) => {
     const printable = (!ev.altKey && !ev.altGraphKey && !ev.ctrlKey && !ev.metaKey),
         kc = parseInt(ev.keyCode);
 
-        console.log(kc,key);
     if (kc === 13) {
         const input = line_inputs.join('').toString();
         history.push(input);
