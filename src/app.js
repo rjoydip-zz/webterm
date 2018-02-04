@@ -26,7 +26,7 @@ term.newLineprompt = () => {
 
 // opening terminal and initilize default text
 term.open($terminal);
-term.writeln('Welcome to Web Terminal');
+term.writeln(`${[' ', '  '].map(() => String.fromCodePoint(0x026C5))} ${String.fromCodePoint('0xa0')} Welcome to Web Terminal ${[' ', ' '].map(() => String.fromCodePoint(0x026C5))}`);
 term.newLineprompt();
 
 socket.on('connect', function () {
