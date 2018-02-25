@@ -1,8 +1,8 @@
-# Web Terminal
+<h1 align="center">Web Terminal</h1>
 
 A simple web terminal using HTML, CSS, JavaScript, xterm.js, socket.io.
 
-# Locally Installation
+## Locally Installation
 
 ```sh
 $ git clone https://github.com/rjoydip/webterm.git
